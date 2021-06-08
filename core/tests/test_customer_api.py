@@ -31,6 +31,7 @@ class PrivateCustomerApiTest(TestCase):
         self.user = get_user_model().objects.create_user(
             "test@crownkiraappdev.com",
             "password123",
+            is_staff=True
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
@@ -56,7 +57,9 @@ class PrivateCustomerApiTest(TestCase):
         Customer.objects.create(name='testcustomer', company=testcompany)
         Customer.objects.create(name='testcustomer2', company=testcompany2)
         testuser = get_user_model().objects.create_user(
-            "testsales@crownkiraappdev.com" "password1234"
+            "testsales@crownkiraappdev.com",
+            "password1234",
+            is_staff=True,
         )
         res = self.client.get(CUSTOMER_URL)
 

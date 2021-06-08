@@ -1,13 +1,13 @@
 from rest_framework import viewsets
 from rest_framework.authentication import TokenAuthentication
-from rest_framework.permissions import IsAuthenticated
+from core.CustomPermissions import CustomPermission
 
 
 class BaseClassAttrForViewSet(viewsets.ModelViewSet):
     """Base attr for viewsets"""
 
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (CustomPermission,)
 
     def _params_to_int(self, qs):
         """Convert string to list of integer"""

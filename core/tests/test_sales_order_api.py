@@ -32,6 +32,7 @@ class PrivateSalesOrderApiTest(TestCase):
         self.user = get_user_model().objects.create_user(
             "test@crownkiraappdev.com",
             "password123",
+            is_staff=True,
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
@@ -83,7 +84,9 @@ class PrivateSalesOrderApiTest(TestCase):
     def test_salesorder_not_limited_to_user(self):
         """Test that salesorder returned are visible by every user"""
         testuser = get_user_model().objects.create_user(
-            "testsales@crownkiraappdev.com" "password1234"
+            "testsales@crownkiraappdev.com",
+            "password1234",
+            is_staff=True,
         )
         testcompany = Company.objects.create(name='testcompany')
         testcustomer = Customer.objects.create(

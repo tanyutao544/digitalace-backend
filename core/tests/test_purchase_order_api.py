@@ -32,6 +32,7 @@ class PrivatePurchseOrderApiTest(TestCase):
         self.user = get_user_model().objects.create_user(
             "test@crownkiraappdev.com",
             "password123",
+            is_staff=True,
         )
         self.client = APIClient()
         self.client.force_authenticate(self.user)
@@ -85,7 +86,8 @@ class PrivatePurchseOrderApiTest(TestCase):
         """Test that purchase order returned are visible by every user"""
         testuser = get_user_model().objects.create_user(
             "testsales@crownkiraappdev.com",
-            "password1234"
+            "password1234",
+            is_staff=True,
         )
         testcompany = Company.objects.create(name="testcompany")
         testcompany2 = Company.objects.create(name="testcompany2")
