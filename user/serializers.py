@@ -9,9 +9,37 @@ class UserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = get_user_model()
-        fields = ("email", "password", "name")
+        # use the following command to easily
+        # retrieve all fields of User:
+        # [f.name for f in User._meta.fields]
+        fields = (
+            # "id",
+            "password",
+            # "last_login",
+            # "is_superuser",
+            # "company",
+            # "is_active",
+            # "is_staff",
+            "email",
+            "name",
+            # "department",
+            # "role",
+            # "image",
+            # "resume",
+            # "first_name",
+            # "last_name",
+            # "residential_address",
+            # "postal_code",
+            # "ic_no",
+            # "nationality",
+            # "gender",
+            # "date_of_birth",
+            # "date_of_commencement",
+            # "date_of_cessation",
+        )
         extra_kwargs = {"password": {"write_only": True, "min_length": 5}}
 
+    # TODO: create employee by POST /employees/
     def create(self, validated_data):
         """Create a new user with encrypted password and return it"""
         return get_user_model().objects.create_user(**validated_data)

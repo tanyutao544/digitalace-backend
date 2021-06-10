@@ -10,6 +10,7 @@ from django.contrib.auth.models import (
 )
 from django.core.validators import FileExtensionValidator
 from django.db.models.fields import CharField
+from django.utils.translation import gettext_lazy as _
 
 
 def get_unique_filename(filename):
@@ -64,6 +65,8 @@ class Department(models.Model):
 class Role(models.Model):
     """Role in a department"""
 
+    # TODO: rename to designation
+
     name = CharField(max_length=255)
     department = models.ForeignKey("Department", on_delete=models.CASCADE)
 
@@ -95,6 +98,10 @@ class UserManager(BaseUserManager):
 class User(AbstractBaseUser, PermissionsMixin):
     """Custom user model that supports using email instead of username"""
 
+    class Gender(models.TextChoices):
+        MALE = "M", _("Male")
+        FEMALE = "F", _("Female")
+
     # null=True since superuser does not have a company
     # if company is null, disable all functionalities
     # can be blank (if created from admin page)
@@ -102,7 +109,8 @@ class User(AbstractBaseUser, PermissionsMixin):
         "Company", on_delete=models.CASCADE, null=True, blank=True
     )
     is_active = models.BooleanField(default=True)
-    # is the user an owner
+    # is the user an owner of his company?
+    # TODO: rename to is_owner
     is_staff = models.BooleanField(default=False)
     email = models.EmailField(max_length=255, unique=True)
     # full name
@@ -133,7 +141,11 @@ class User(AbstractBaseUser, PermissionsMixin):
     postal_code = models.CharField(max_length=255, blank=True)
     ic_no = models.CharField(max_length=255, blank=True)
     nationality = models.CharField(max_length=255, blank=True)
-    gender = models.CharField(max_length=255, blank=True)
+    gender = models.CharField(
+        max_length=1,
+        blank=True,
+        choices=Gender.choices,
+    )
 
     date_of_birth = models.DateField(null=True, blank=True)
     date_of_commencement = models.DateField(null=True, blank=True)
@@ -161,6 +173,8 @@ class UserConfig(models.Model):
     discount_rate = models.DecimalField(
         max_digits=10, decimal_places=2, default=Decimal(0.00)
     )
+    theme = models.CharField(max_length=255, blank=True, default="light")
+    language = models.CharField(max_length=255, blank=True, default="en")
 
     def __str__(self):
         return self.user.name
