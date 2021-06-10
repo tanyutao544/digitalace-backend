@@ -135,6 +135,9 @@ class PrivatePurchseOrderApiTest(TestCase):
 
         res = self.client.get(PURCHASEORDER_URL)
 
+        self.assertEqual(res.status_code, status.HTTP_200_OK)
+        self.assertEqual(len(res.data), 2)
+
     def test_create_purchase_order_successful(self):
         """Test creating a new purchase order"""
         self.company = Company.objects.create(name="testcompany")

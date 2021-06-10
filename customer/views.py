@@ -1,5 +1,7 @@
 from core.pagination import CustomPagination
 from core.views import BaseClassAttrForViewSet
+from rest_framework.response import Response
+from rest_framework import status
 
 from core.models import Invoice, Customer, SalesOrder
 
@@ -11,6 +13,20 @@ class InvoiceViewSet(BaseClassAttrForViewSet):
     queryset = Invoice.objects.all()
     serializer_class = serializers.InvoiceSerializer
     pagination_class = CustomPagination
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response(
+            serializer.data,
+            status=status.HTTP_201_CREATED,
+            headers=headers
+        )
+
+    def perform_create(self, serializer):
+        serializer.save()
 
 
 class CustomerViewSet(BaseClassAttrForViewSet):
